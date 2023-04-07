@@ -1,0 +1,212 @@
+This document describes all debug modes in the S-PPU2, how to activate them and how the different pins are used.
+
+==============
+--- Mode 0 ---
+==============
+
+This mode is the normal operation mode, or debug off mode. On an unmodded SNES tst12..15 are connected to ground.
+
+--- How to activate ---
+
+tst12 = 0
+tst13 = 0
+tst14 = 0
+tst15 = 0
+
+==============
+--- Mode 1 ---
+==============
+
+The only thing this mode seems to do is make it so you need to set bit 7 of pa0..7 in order to access registers. Not sure what the point is. This is also used in Mode 8. This mode should be able to output the CGRAM index of the pixel to render, but it seems more like a side effect of how the debug circuit is wired. Most likely this was supposed to be only in Mode 7.
+
+--- How to activate ---
+
+tst12 = 1
+tst13 = 0
+tst14 = 0
+tst15 = 0
+
+==============
+--- Mode 2 ---
+==============
+
+This mode freezes the OPHCT counter and unfreezes OPVCT counter. The OPVCT counter normally is freezed unless /hcld is low, which resets the OPHCT counter. This mode should be able to output the CGRAM index of the pixel to render, but it seems more like a side effect of how the debug circuit is wired. Most likely this was supposed to be only in Mode 7.
+
+--- How to activate ---
+
+tst12 = 0
+tst13 = 1
+tst14 = 0
+tst15 = 0
+
+==============
+--- Mode 3 ---
+==============
+
+This mode unfreezes OPVCT without freezing OPHCT counter. This mode should be able to output the CGRAM index of the pixel to render, but it seems more like a side effect of how the debug circuit is wired. Most likely this was supposed to be only in Mode 7.
+
+--- How to activate ---
+
+tst12 = 1
+tst13 = 1
+tst14 = 0
+tst15 = 0
+
+==============
+--- Mode 4 ---
+==============
+
+This mode can be used to read the bitplane decoder output from tst0..11. The result read is the palette index from character data for all enabled backgrounds. Note that the S-PPU2 doesn’t have any circuits to initiate reads from the VRAM chips. The VRAM reads are most likely handled by S-PPU1 and the S-PPU2 just takes its own copy of the data.
+
+--- Data output ---
+
+Numbers in bit patterns are the background numbers. The extra background data for BG modes 6 and 7 comes from ext0..7, so it doesn't go through the bitplane decoder and is not present in the output.
+
+BG Mode 0 = 2222 4433 1111
+BG Mode 1 = 2222 ..33 1111
+BG Mode 2 = 2222 .... 1111
+BG Mode 3 = 2222 1111 1111
+BG Mode 4 = ..22 1111 1111
+BG Mode 5 = ..22 .... 1111
+BG Mode 6 = .... .... 1111
+BG Mode 7 = .... 1111 1111
+
+--- How to activate ---
+
+tst12 = 0
+tst13 = 0
+tst14 = 1
+tst15 = 0
+
+==============
+--- Mode 5 ---
+==============
+
+This mode lets you read window masking results for layers and color window and layer priority result. Input data comes from vda0..7 and vdb0..7 pins just like when the chip is functioning in normal mode, so the data is buffered to the bit plane decoder, from which it is output to the priority circuit. Object data comes from chr0..3, color0..2 and prio0..1. This too is the normal function of these pins.
+
+--- Data output ---
+
+tst0 = /priority_result_bg1
+tst1 = /priority_result_bg2
+tst2 = /priority_result_bg3
+tst3 = /priority_result_bg4
+tst4 = /priority_result_obj
+tst5 = /priority_result_backdrop
+tst6 = window_mask_result_bg1
+tst7 = window_mask_result_bg2
+tst8 = window_mask_result_bg3
+tst9 = window_mask_result_bg4
+tst10 = window_mask_result_obj
+tst11 = window_mask_result_color
+
+--- How to activate ---
+
+tst12 = 1
+tst13 = 0
+tst14 = 1
+tst15 = 0
+
+==============
+--- Mode 6 ---
+==============
+
+This mode is the same as Mode 5, but it lets you use vda0..7, vba0..7 and ext0..7 to determine layer input data. Object data is given the same way as Mode 5. Output is the same as Mode 5.
+
+--- Data input ---
+
+vda0-1 = BG3 color index, 2BPP, fixed to first palette
+vda2   = BG3 priority
+vda4-5 = BG4 color index, 2BPP, fixed to first palette
+vda6   = BG4 priority
+vda7   = BG1 priority
+vdb0-7 = BG1 color index, 8BPP
+ext0-3 = BG2 color index
+ext4-6 = BG2 palette
+ext7   = BG2 priority
+
+--- How to activate ---
+
+tst12 = 0
+tst13 = 1
+tst14 = 1
+tst15 = 0
+
+==============
+--- Mode 7 ---
+==============
+
+In this mode the input data is given in the same way as Mode 6, but the output is the CGRAM index of the pixel to be rendered.
+
+--- How to activate ---
+
+tst12 = 1
+tst13 = 1
+tst14 = 1
+tst15 = 0
+
+==============
+--- Mode 8 ---
+==============
+
+In this mode you can use the tst0..14 pins to give a 15-bit RGB value to test the DAC. The brightness value for the DAC can be set through the INIDISP register as usual. In this mode the bit 7 of the register address must be set to access the register, so writing to the INIDISP register requires the address to be $80 instead of the usual $00. In this mode the /transparent pin is in input mode and must be set high. This disables the output from the color math block. This is the only mode case where the /transparent pin is treated as an input.
+
+--- How to activate ---
+
+tst15        = 1
+/over1       = 0
+/over2       = 0
+/transparent = 1
+
+==============
+--- Mode 9 ---
+==============
+
+In this mode you can use tst0..8 to give color, palette and priority data for a pixel in the object layer instead of the chr0..3, color0..2 and prio0..1 pins. Additionally the tst0..3 pins have to be a non-zero value to use the value from the tst0..8 pins.
+
+--- Data input ---
+
+tst0-3 = object pixel color
+tst4-6 = object palette
+tst7-8 = object priority
+
+--- How to activate ---
+
+tst15  = 1
+/over1 = 1
+/over2 = 0
+
+===============
+--- Mode 10 ---
+===============
+
+In this mode you can test the color math block. The vdb0..7, vda0..2, ext0..5 and ext7 pins to the give input data. The output from the color math block can be read from tst0..14, which is a 15-bit RGB value.
+
+--- Data input ---
+
+vdb0-7 = low bits of CGRAM color index
+vda0-2 = high bits of CGRAM color index
+ext0   = /priority_result_bg1
+ext1   = /priority_result_bg2
+ext2   = /priority_result_bg3
+ext3   = /priority_result_bg4
+ext4   = /priority_result_obj
+ext5   = /priority_result_backdrop
+ext7   = color window result (substitutes value from window logic)
+
+--- How to activate ---
+
+tst15  = 1
+/over1 = 0
+/over2 = 1
+
+===============
+--- Mode 11 ---
+===============
+
+This mode lets you read the color math output value from tst0..14 pins. This mode is the same as Mode 10, but using the vdb0..7, vda0..2, ext0..5 and ext7 pins in the normal mode functions.
+
+--- How to activate ---
+
+tst15  = 1
+/over1 = 1
+/over2 = 1
