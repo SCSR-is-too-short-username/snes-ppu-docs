@@ -1,0 +1,315 @@
+====================
+--- Pins Numbers ---
+====================
+
+001. /BURST
+002. /PED
+003. 3.58M
+004. /TRANSPARENT
+005. VCC
+006. /PAWR
+007. /PARD
+008. CPU D7
+009. CPU D6
+010. CPU D5
+011. CPU D4
+012. CPU D3
+013. CPU D2
+014. CPU D1
+015. CPU D0
+016. GND
+017. PA7
+018. PA6
+019. PA5
+020. PA4
+021. PA3
+022. PA2
+023. PA1
+024. PA0
+025. HBLANK
+026. VBLANK
+027. /5MOUT
+028. /RESOUT1
+029. EXTLATCH
+030. PALMODE
+031. XIN
+032. VCC
+033. /RESOUT0
+034. /RESET
+035. GND
+036. FIELD
+037. /OVER1
+038. /5MIN
+039. /HCLD
+040. /VCLD
+041. COLOR0
+042. COLOR1
+043. COLOR2
+044. PRIO0
+045. PRIO1
+046. CHR0
+047. CHR1
+048. CHR2
+049. CHR3
+050. /OVER2
+051. VDB0
+052. VDB1
+053. VDB2
+054. VDB3
+055. VDB4
+056. VDB5
+057. VDB6
+058. VDB7
+059. VCC
+060. VDA0
+061. VDA1
+062. VDA2
+063. VDA3
+064. VDA4
+065. VDA5
+066. VDA6
+067. VDA7
+068. GND
+069. EXT0
+070. EXT1
+071. EXT2
+072. EXT3
+073. EXT4
+074. EXT5
+075. EXT6
+076. EXT7
+077. TST0
+078. TST1
+079. TST2
+080. TST3
+081. TST4
+082. TST5
+083. VCC
+084. TST6
+085. TST7
+086. TST8
+087. TST9
+088. TST10
+089. TST11
+090. TST12
+091. TST13
+092. TST14
+093. TST15
+094. AVCC
+095. AR
+096. AG
+097. AB
+098. HVCMODE
+099. GND
+100. /CSYNC
+
+========================
+--- Pin Descriptions ---
+========================
+
+--- VCC ---
+
+Voltage input pin
+
+--- AVCC ---
+
+Analog voltage input pin
+Provide +5V to DAC
+
+--- GND ---
+
+Ground pin
+
+--- /BURST ---
+
+Burst flag pulse
+Active low
+Connected to /BFP and /PCP in S-ENC
+
+--- /PED ---
+
+Unknown
+Probably pedestal clamp pulse
+Active low
+Normally disconnected, but probably was intended to connect to /PCP in S-ENC
+
+--- 3.58M ---
+
+S-ENC VCXO input
+
+--- /TRANSPARENT ---
+
+Transparent pixel output
+Active low
+Low when a pixel output color is all zeros
+Input pin in debug mode 8
+Normally disconnected
+
+--- /PAWR ---
+
+Write signal
+Active low
+Signals that the CPU wants to write to the address on PA0..7
+
+--- /PARD ---
+
+Read signal
+Active low
+Signals that the CPU wants to read from the address on PA0..7
+
+--- CPU D0..7 ---
+
+CPU data bus pins
+
+--- PA0..7 ---
+
+B-bus address bus pins
+
+--- HBLANK ---
+
+Horizontal blanking signal
+Connected to pin of same name in S-CPU
+
+--- VBLANK ---
+
+Vertical blanking signal
+Connected to pin of same name in S-CPU
+
+--- /5MOUT ---
+
+Pixel clock out
+Active low
+Connected to DOTCLK in expansion port
+
+--- /RESOUT1 ---
+
+Reset output signal
+Active low
+Connected to /RESET pin in S-CPU
+
+--- EXTLATCH ---
+
+External counter latch
+Latches the horizontal and vertical position counter values
+Connected to JPIO7 in the controller port board
+
+--- PALMODE ---
+
+NTSC/PAL mode select
+Changes timing of most vertical timing signals to occur 24 scanlines later
+Connected to ground in NTSC and NTSC-J consoles and connected to VCC in PAL consoles
+
+--- XIN ---
+
+Master clock in
+
+--- /RESOUT0 ---
+
+Reset output signal
+Active low
+Connected to /RESET pin in S-PPU1
+
+--- /RESET ---
+
+Reset input signal
+Connected to the P10 pin in CIC
+
+--- FIELD ---
+
+Interlace field
+Changes state every frame and indicates whether to draw on odd or even numbered scanlines when interlace is enabled
+Connected to pin of same name in S-PPU1
+
+--- /OVER1 ---
+
+Unknown
+Active low
+When low, BG1 is forcibly disabled when TST15 is low
+When TST15 is high, used to select debug mode
+Connected to /OVER in S-PPU1
+
+--- /5MIN ---
+
+Pixel clock in
+Active low
+Latches data from VDA0..7, VDB0..7 and EXT0..7 pins
+Connected to /5MOUT in S-PPU1
+
+--- /HCLD ---
+
+Horizontal counter clear
+Active low
+Resets the OPHCT counter and unfreezes the OPVCT counter
+Connected to pin of same name in S-PPU1
+
+--- /VCLD ---
+
+Vertical counter clear
+Active low
+When this pin and /HCLD are low, clears the OPVCT counter
+Connected to pin of same name in S-PPU1
+
+--- COLOR0..2 ---
+
+Sprite pixel palette
+Connected to pins of same name in S-PPU1
+
+--- PRIO0..1 ---
+
+Sprite pixel priority
+Connected to pins of same name in S-PPU1
+
+--- CHR0..3 ---
+
+Sprite pixel color index
+Connected to pins of same name in S-PPU1
+
+--- /OVER2 ---
+
+Unknown
+Active low
+When low, BG2 is forcibly disabled when TST15 is low
+When TST15 is high, used to select debug mode
+Connected to /OVER in S-PPU1
+
+--- VDB0..7 ---
+
+VRAM bus high bits
+
+--- VDA0..7 ---
+
+VRAM bus low bits
+
+--- EXT0..7 ---
+
+Extra background data pins
+These pins were unused and connected to VDB0..7
+
+--- TST0..15 ---
+
+Primary debug mode pins
+0..11 are output
+12..14 are I/O
+15 is input
+0..11 are disconnected
+12..15 are grounded
+12..14 used to select debug mode when 15 is low
+When 15 is high, /over1..2 are used to select debug mode and 12..14 are output
+
+--- AR, AG, AB ---
+
+Analog RGB output
+Connected to pins of same name in S-ENC
+
+--- HVCMODE ---
+
+Home video computer mode
+Normally grounded
+Setting this pin high has the same effect as pulling /RESET pin low
+Most likely the original intent was to use this for the planned NES backwards compability mode
+
+--- /CSYNC ---
+
+Composite sync
+Active low
+Connected to SYNC pin in S-ENC
