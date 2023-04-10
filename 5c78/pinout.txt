@@ -122,8 +122,10 @@ Ground pin
 
 --- /BURST ---
 
-Burst flag pulse
+Color burst flag
 Active low
+Tells the S-ENC when to add color burst
+Since phase offset is used to determine hue (at least in NTSC video), the TV needs some reference to syncronize to and compare the phase of the actual video signal do display the correct hue
 Connected to /BFP and /PCP in S-ENC
 
 --- /PED ---
@@ -131,11 +133,14 @@ Connected to /BFP and /PCP in S-ENC
 Unknown
 Probably pedestal clamp pulse
 Active low
+As far as I know, this is used to latch a reference voltage for black level
 Normally disconnected, but probably was intended to connect to /PCP in S-ENC
 
 --- 3.58M ---
 
 S-ENC VCXO input
+NTSC video uses 3.58MHz as the chrominance subcarrier frequency
+The S-ENC probably uses this to generate the color burst reference and chrominance signal for the TV
 
 --- /TRANSPARENT ---
 
