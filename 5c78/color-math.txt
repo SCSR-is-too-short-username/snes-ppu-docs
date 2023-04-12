@@ -1,0 +1,94 @@
+This document will explain how the color math section works.
+
+Note: the S-PPU2 divides the system clock by 2 and 4. The clock high/low states are markes as 'dclk' + divisior.
+
+=================
+--- Registers ---
+=================
+
+Here is a list of registers that are involved with color math.
+
+--- $05 - BGMODE ---
+
+4321 PMMM
+|||| ||||
+|||| |+++- Background mode
+|||| +---- Mode 1 BG3 high priority mode
+|||+------ BG1 character size (0 = 8x8, 1 = 16x16)
+||+------- BG2 character size (0 = 8x8, 1 = 16x16)
+|+-------- BG3 character size (0 = 8x8, 1 = 16x16)
++--------- BG4 character size (0 = 8x8, 1 = 16x16)
+
+--- $30 - CGWSEL ---
+
+MMSS ..sD
+||||   ||
+||||   |+- Direct color mode
+||||   +-- Add/subtract subscreen instead of fixed color
+||++------ Force subscreen color to black
+||           00 = Never
+||           01 = Outside color window
+||           10 = Inside color window
+||           11 = Always
+++-------- Force main screen color to black
+             00 = Never
+             01 = Outside color window
+             10 = Inside color window
+             11 = Always
+
+--- $31 - CGADSUB ---
+
+SHBO 4321
+|||| ||||
+|||| |||+- Enable color math for BG1
+|||| ||+-- Enable color math for BG2
+|||| |+--- Enable color math for BG3
+|||| +---- Enable color math for BG4
+|||+------ Enable color math for objects
+||+------- Enable color math for backdrop
+|+-------- Divide addition/subtraction result by 2
++--------- Add/subtract colors (0 = Add, 1 = Subtract)
+
+--- $32 - COLDATA ---
+
+BGRC CCCC
+|||| ||||
+|||+-++++- Color value to set for selected channels
+||+------- Set color value for red channel
+|+-------- Set color value for green channel
++--------- Set color value for blue channel
+
+--- $33 - SETINI ---
+
+XE.. HOIS
+||   ||||
+||   |||+- Screen interlace
+||   ||+-- Object interlace
+||   |+--- Overscan mode
+||   +---- Hires mode
+|+-------- Enable extra background for mode 6 or 7
++--------- External sync
+
+=================
+--- Operation ---
+=================
+
+Here is a description of how the color math operates. Note that some of these operations happen at the same time.
+
+1. The first section consists of 12 D-latces. 11 of these are used to latch CGRAM address for the color (or RGB value in direct color mode). The last one is used to latch direct color mode select. Write to these latches is enabled on every dclk2. Direct color mode is used when BG mode is 3, 4 or 7, BG1 was selected by priority logic and direct color mode is enabled.
+
+2. Next the color math selects input between the D-latches and output from CGRAM. This depends on the direct color mode select.
+
+3. Next is two sets of 15 D-latches. Write is enabled on every dclk2. The first set of latches is for main screen pixel color and second set is for subscreen pixel color. The two set of D-latches are in series, so the subscreen pixel color has to go through the main screen pixel color latches first.
+
+4. Now the color math selects between the subscreen pixel color and fixed color. The subscreen pixel color is selected when subscreen is selected from CGWSEL and layer priority logic didn't select backdrop.
+
+5. Now the main screen (A part) and subscreen or fixed color (part B) go through a check to see if the color is passed to the adder. If the check fails, the color of the corresponding part is set to all zeros (black). Part A is passed through if bit n of part A color value is set, color output is enabled and main screen is not forced to black. Part B is passed through if bit n of part B color value is set, color output is enabled sub screen is not forced to black and color math is enabled.
+
+Color math is enabled when layer selected by the priority logic matches a layer that has color math enabled from CGADSUB. Color outpur is enabled when H/V counter position is on screen and not F-blanking. The result for both parts are latched in D-latches. Write to these latches are enabled when dclk4 is true and dclk2 is false or when dclk2 is false if hires, bgmode 5 or 6 is true. Basically setting 'bgmode5', 'bgmode6' or 'hires' triggers writes to the D-latches two times more often.
+
+6. Next parts A and B are added/subtracted. When adding carry out is true when the color channel value overflows. When subtracting carry out is false when color channel value underflows. Color channel value is limited to $00 - $1F range.
+
+7. Next the result is divided by 2 if the required condition is met. The condition requires that the result division is enabled, color math is enabled, neither part is forced to black and finally, the priority logic selected backdrop, using subscreen (instead of fixed color) or neither, but not both at once.
+
+8. The result of division (or lack of) is stored in D-latches with tristate output. Write is enabled when dclk2 is true. The output of the D-latches is disabled when in debug mode 8 and /transparent pin is high (in debug mode 8 this pin is in input mode). The resulting color is also tested if it is all zeros (black). This is used to determine /transparent pin output.
