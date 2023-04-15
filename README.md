@@ -8,4 +8,4 @@ The die shots for both PPU is available at siliconpr0n, which I have been using 
 
 5c77: Not started
 
-5c78: ~97% complete
+5c78: Completed
