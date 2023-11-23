@@ -1,0 +1,271 @@
+====================
+--- Pins Numbers ---
+====================
+
+001. TST1
+002. TST0
+003. /PARD
+004. /PAWR
+005. PA7
+006. PA6
+007. PA5
+008. PA4
+009. PA3
+010. PA2
+011. PA1
+012. PA0
+013. VCC
+014. CPU D7
+015. CPU D6
+016. CPU D5
+017. CPU D4
+018. CPU D3
+019. CPU D2
+020. CPU D1
+021. CPU D0
+022. GND
+023. HVCMODE
+024. PALMODE
+025. /MASTER
+026. /EXTSYNC
+027. NC (not connected)
+028. VDB0
+029. VDB1
+030. VDB2
+031. VDB3
+032. VDB4
+033. VDB5
+034. VDB6
+035. VDB7
+036. VCC
+037. VDA0
+038. VDA1
+039. VDA2
+040. VDA3
+041. VDA4
+042. VDA5
+043. VDA6
+044. VDA7
+045. GND
+046. VA15
+047. VA14
+048. VAB13
+049. VAB12
+050. VAB11
+051. VAB10
+052. VAB9
+053. VAB8
+054. VAB7
+055. VAB6
+056. VAB5
+057. VAB4
+058. VAB3
+059. VAB2
+060. VAB1
+061. VAB0
+062. VCC
+063. VAA13
+064. VAA12
+065. VAA11
+066. VAA10
+067. VAA9
+068. VAA8
+069. VAA7
+070. VAA6
+071. VAA5
+072. VAA4
+073. VAA3
+074. VAA2
+075. VAA1
+076. VAA0
+077. GND
+078. /VAWR
+079. /VBWR
+080. /VRD
+081. VCC
+082. CHR3
+083. CHR2
+084. CHR1
+085. CHR0
+086. PRIO1
+087. PRIO0
+088. COLOR2
+089. COLOR1
+090. COLOR0
+091. /VCLD
+092. /HCLD
+093. /5MOUT
+094. /OVER
+095. FIELD
+096. GND
+097. /5MIN
+098. /RESET
+099. TST2
+100. XIN
+
+========================
+--- Pin Descriptions ---
+========================
+
+--- VCC ---
+
+Voltage input pin
+
+--- GND ---
+
+Ground pin
+
+--- TST0..2 ---
+
+Test mode select pins
+Test mode functions currently unknown
+
+--- /PAWR ---
+
+Write signal
+Active low
+Signals that the CPU wants to write to the address on PA0..7
+
+--- /PARD ---
+
+Read signal
+Active low
+Signals that the CPU wants to read from the address on PA0..7
+
+--- PA0..7 ---
+
+B-bus address bus pins
+
+--- CPU D0..7 ---
+
+CPU data bus pins
+
+--- HVCMODE ---
+
+Home video computer mode
+Normally grounded
+Setting this pin high has the same effect as pulling /RESET pin low
+Most likely the original intent was to use this for the planned NES backwards compability mode
+
+--- PALMODE ---
+
+NTSC/PAL mode select
+Changes timing of most vertical timing signals to occur 24 scanlines later
+Connected to ground in NTSC and NTSC-J consoles and connected to VCC in PAL consoles
+
+--- /MASTER ---
+
+When low, FIELD, /HCLD and /VCLD are output pins. When high, they are inputs.
+Active low
+
+--- /EXTSYNC ---
+
+When this pin goes low and "extsync" is enabled in SETINI register, /HCLD and /VCLD will be toggled low, resetting the horizontal and vertical position counters.
+Active low
+
+--- VDA0..7 ---
+
+VRAM data bus A
+Connected to the first VRAM chip
+
+--- VDB0..7 ---
+
+VRAM data bus B
+Connected to the second VRAM chip
+
+--- VAA0..13 ---
+
+VRAM address bus A
+Connected to the first VRAM chip
+
+--- VAB0..13 ---
+
+VRAM address bus B
+Connected to the second VRAM chip
+
+--- VA14..15 ---
+
+Shared VRAM address pins
+VA14 is connected to both VRAM chips
+VA15 is not connected, but probably could be connected to a larger chip
+
+--- /VAWR ---
+
+Write signal to the first VRAM chip
+Active low
+
+--- /VBWR ---
+
+Write signal to the second VRAM chip
+Active low
+
+--- /VRD ---
+
+Read signal to VRAM
+Active low
+
+--- CHR0..3 ---
+
+Sprite pixel color index
+Sends color index information to S-PPU2 for a sprite pixel in the current rendering position
+
+--- PRIO0..1 ---
+
+Sprite pixel priority
+Sends priority information to S-PPU2 for a sprite pixel in the current rendering position
+
+--- COLOR0..2 ---
+
+Sprite pixel palette
+Sends palette information to S-PPU2 for a sprite pixel in the current rendering position
+
+--- /HCLD ---
+
+Horizontal counter clear
+Active low
+Resets the OPHCT counter and unfreezes the OPVCT counter
+Connected to pin of same name in S-PPU2
+Normally output, but becomes input if /MASTER is pulled low
+
+--- /VCLD ---
+
+Vertical counter clear
+Active low
+When this pin and /HCLD are low, clears the OPVCT counter
+Connected to pin of same name in S-PPU2
+Normally output, but becomes input if /MASTER is pulled low
+
+--- /5MOUT ---
+
+Pixel clock out
+Active low
+Connected to /5MIN pin in S-PPU2
+
+--- /OVER ---
+
+Unknown use
+Active low
+Connected to /OVER1 and /OVER2 in S-PPU2, which will forcibly disable BG1 and BG2
+
+--- FIELD ---
+
+Interlace field
+Changes state every frame and indicates whether to draw on odd or even numbered scanlines when interlace is enabled
+Connected to pin of same name in S-PPU2
+Normally output, but becomes input if /MASTER is pulled low
+
+--- /5MIN ---
+
+Pixel clock in
+Active low
+Connected to /5MOUT in S-PPU1
+
+--- /RESET ---
+
+Reset pin
+Active low
+Connected to /RESOUT0 in S-PPU2
+
+--- XIN ---
+
+Master clock in
