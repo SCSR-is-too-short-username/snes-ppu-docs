@@ -243,8 +243,9 @@ Connected to /5MIN pin in S-PPU2
 
 --- /OVER ---
 
-Unknown use
+Matrix transform outside screen
 Active low
+Used in Mode 7 rendering when M7SEL bit 6 is set to 0 and bit 7 is set to 1
 Connected to /OVER1 and /OVER2 in S-PPU2, which will forcibly disable BG1 and BG2
 
 --- FIELD ---
