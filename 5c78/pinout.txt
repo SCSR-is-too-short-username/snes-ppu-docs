@@ -227,7 +227,7 @@ Connected to pin of same name in S-PPU1
 
 --- /OVER1 ---
 
-Matrix transform outside nametable 1
+Matrix transform outside screen 1
 Active low
 When low, BG1 is forcibly disabled when TST15 is low
 Used in Mode 7 rendering when M7SEL bit 6 is set to 0 and bit 7 is set to 1
@@ -272,12 +272,13 @@ Connected to pins of same name in S-PPU1
 
 --- /OVER2 ---
 
-Matrix transform outside nametable 2
+Matrix transform outside screen 2
 Active low
 When low, BG2 is forcibly disabled when TST15 is low
 Used in Mode 7 rendering when M7SEL bit 6 is set to 0 and bit 7 is set to 1
 When TST15 is high, used to select debug mode
 Connected to /OVER in S-PPU1
+If the extra background feature was used, this pin most likely would have been connected to something else
 
 --- VDB0..7 ---
 
