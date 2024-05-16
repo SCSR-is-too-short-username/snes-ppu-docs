@@ -144,8 +144,8 @@ CPU data bus pins
 
 Home video computer mode
 Normally grounded
-Setting this pin high has the same effect as pulling /RESET pin low
-Most likely the original intent was to use this for the planned NES backwards compability mode
+Setting this pin high turns off the /VRD, /VAWR and VAA0..10 pin outputs.
+Additionally, the usage of the VRAM address set through VMADDL and VMADDH is not allowed.
 
 --- PALMODE ---
 
