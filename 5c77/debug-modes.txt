@@ -4,7 +4,7 @@ This document describes all debug modes in the S-PPU1, how to activate them and 
 --- Mode 0 ---
 ==============
 
-This mode is the normal operation mode, or debug off mode. On an unmodded SNES tst12..15 are connected to ground.
+This mode is the normal operation mode, or debug off mode. On an unmodded SNES tst0..2 are connected to ground.
 
 --- How to activate ---
 
@@ -53,9 +53,7 @@ tst2 = 0
 ==============
 
 In this mode you can read and write to the OAM address table that keeps track of objects on the current line.
-This mode also disables the OAM CHR bitplane decoder.
-
-This mode has other functions too, but I haven't figured out what those are yet.
+This mode also disables the OAM CHR bitplane decoder and has some effect on line buffer write signals.
 
 --- Data input ---
 
@@ -76,7 +74,14 @@ tst2 = 1
 --- Mode 5 ---
 ==============
 
-Currently unknown. Seems to partially route to same areas as Mode 4.
+In this mode the sprite tile horizontal flip is triggered with dclk4, instead of the OAM horizontal flip bit.
+Additionally, you can write line buffer data directly with the VDA0..7 and VDB0..7 pins.
+
+--- Data input ---
+
+pa0..6 = Line buffer address
+vda0..7 = Line buffer data
+vdb0..7 = Line buffer data
 
 --- How to activate ---
 
@@ -88,23 +93,26 @@ tst2 = 1
 --- Mode 6 ---
 ==============
 
-The output from the pixel buffer tables to the chr0..3, color0..2 and prio0..1 pins is disabled.
-The use of the VRAM address through VMADDL and VMADDH is disabled. The VAA, VBB and VA pins are used as debug outputs.
+The output from the line buffer tables to the chr0..3, color0..2 and prio0..1 pins is disabled.
+The use of the VRAM address through VMADDL and VMADDH is disabled. The VAA, VAB and VA pins are used as debug outputs.
 
 --- Data output ---
 
-chr0..3, color0..2 = Address to the 2nd pixel buffer table
-prio0..1 = Unknown
+chr0..3, color0..2 = Address to the 2nd line buffer table
+prio0 = Current sprite X position offscreen
+prio1 = Line buffer address counter reload
 vaa0 = /Object size 8px
 vaa1 = /Object size 16px
 vaa2 = /Object size 32px
 vaa3 = /Object size 64px
-vaa4 = Unknown
-vaa5 = Unknown
-vaa6 = Unknown
+vaa4..6 = Sprite tile horizontal offset
 vaa7 = Unknown
+vaa8..12 = Sprites on current line counter
 vaa13 = Unknown
-va14..15 = Unknown
+vab0..7 = OAM horizontal position
+vab8..13 = OAM vertical position
+va14 = OAM size bit
+va15 = OAM horizontal position high bit
 vb0..7 = OAM data output
 
 --- How to activate ---
